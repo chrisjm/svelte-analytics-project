@@ -1,0 +1,16 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "target": "es2020",
+    "sourceMap": true,
+    "noImplicitAny": false,
+    "noImplicitThis": false,
+    "preserveConstEnums": true,
+    "strict": true,
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "outDir": "dist-server"
+  },
+  "include": ["server/**/*.ts"]
+}

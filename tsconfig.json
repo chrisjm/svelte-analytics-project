@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "target": "esnext",
+    "sourceMap": true,
+    "noImplicitAny": false,
+    "noImplicitThis": false,
+    "preserveConstEnums": true,
+    "strict": true,
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "outDir": "tsout",
+    "baseUrl": ".",
+    "importsNotUsedAsValues": "error",
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "paths": {
+      "@carevoyance/components/*": ["src/components/*"],
+      "@carevoyance/charts": ["src/charts"],
+      "@carevoyance/ui/*": ["src/ui/*"],
+      "@carevoyance/ts-types": ["src/ts-types"]
+    }
+  },
+  "include": ["**/*.ts", "prepare.mjs"]
+}

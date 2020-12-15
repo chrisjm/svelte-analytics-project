@@ -1,0 +1,8 @@
+.build
+build/
+web_modules/
+node_modules/
+dist-server/
+data/*.swp
+data.db
+lib
