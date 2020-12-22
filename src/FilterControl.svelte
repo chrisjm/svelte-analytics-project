@@ -5,18 +5,18 @@
 
   export let options = [
     { id: 'all', text: `All` },
-    { id: 'filter1', text: `Filter 1` },
-    { id: 'filter2', text: `Filter 2` },
-    { id: 'filter3', text: `Filter 3` },
+    { id: '1', text: `Filter 1` },
+    { id: '2', text: `Filter 2` },
+    { id: '3', text: `Filter 3` },
   ];
   export let id = 'filter';
   export let labelText = 'Filter';
 
   let selected;
 
-  function handleChange() {
+  function handleChange(event) {
     dispatch('updateFilter', {
-      value: selected.id,
+      id: selected.id,
       text: selected.text,
     });
   }
@@ -29,7 +29,7 @@
       <select
         bind:value={selected}
         name={id}
-        {id}
+        id={id}
         class="w-full border-0 bg-transparent focus:ring-indigo-300 p-0 font-bold">
         {#each options as option}
           <option value={option}>{option.text}</option>

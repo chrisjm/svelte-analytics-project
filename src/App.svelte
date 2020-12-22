@@ -11,6 +11,7 @@
     BarChartDimension,
   } from './charts/dimensions';
   import dayjs from 'dayjs';
+  import FilterControl from './FilterControl.svelte';
 
   interface LoginsByDay {
     day: string;
@@ -23,10 +24,16 @@
     index: number;
   }
 
+  interface SelectOption {
+    id: string;
+    text: string;
+  }
+
   let loginsByDay: LoginsByDay[];
   let loginsByOrg: LoginsByOrg[];
 
   let loaded = false;
+
   async function load() {
     [loginsByDay, loginsByOrg] = await Promise.all([
       ky('/api/logins_by_day').json<LoginsByDay[]>(),
@@ -52,16 +59,19 @@
     },
   ];
 
+  // Create rainbow color scale based on orgs
   $: orgColors = scaleSequential(interpolateSinebow).domain([
     0,
     loginsByOrg?.length ?? 1,
   ]);
   let orgChartDimensions: BarChartDimension<LoginsByOrg>[] = [];
+
+  // NOTE: Reactivity caused by `orgColors()` above.
   $: orgChartDimensions = [
     {
       name: (d) => d.org,
       value: (d) => d.users,
-      color: (data) => orgColors(data.index),
+      color: (d) => orgColors(d.index),
     },
   ];
 
@@ -88,29 +98,81 @@
     }
     return s;
   }
+
+  function updateFilter(event) {
+    const { id, text } = event.detail;
+    console.log(`${text} (${id})`);
+  }
+
+  // Hard-coded for now
+  // TODO: Retrieve via API call
+  let applicationOptions = [
+    { id: 'all', text: 'All' },
+    { id: '1', text: 'Omni' },
+    { id: '2', text: 'Territory' },
+  ];
+  let dateRangeOptions = [
+    { id: 'today', text: 'Today' },
+    { id: 'yesterday', text: 'Yesterday' },
+    { id: '7d', text: 'Last 7 Days' },
+    { id: '14d', text: 'Last 14 Days' },
+    { id: '30d', text: 'Last 30 days' },
+    { id: 'custom', text: 'Custom' },
+  ];
+
+  // Generate `orgOptions` from `loginsByOrg`
+  let orgOptions: SelectOption[] = [];
+  $: {
+    orgOptions = loginsByOrg?.map((d) => {
+      return {
+        id: d.index.toString(),
+        text: d.org,
+      };
+    });
+  }
 </script>
 
 <style>
 </style>
 
-<div class="h-screen w-screen p-16 flex-col space-y-4">
+<div class="flex flex-col space-y-4 bg-indigo-50">
   {#if loaded}
-    <div class="h-1/2 w-full">
-      <LineChart
-        title="Logins By Day"
-        dimensions={dayChartDimensions}
-        data={loginsByDay}
-        tooltipHeader={(d) => d.day}
-        {xAxis} />
+    <div class="filterControls">
+      <FilterControl
+        id="apps"
+        labelText="Applications"
+        options={applicationOptions}
+        on:updateFilter={updateFilter} />
+      <FilterControl
+        id="orgs"
+        labelText="Organizations"
+        options={orgOptions}
+        on:updateFilter={updateFilter} />
+      <FilterControl
+        id="daterange"
+        labelText="Date range"
+        options={dateRangeOptions}
+        on:updateFilter={updateFilter} />
     </div>
 
-    <div class="h-1/2 w-full">
-      <HorizontalBarChart
-        title="Active Users By Org"
-        labels={(d) => d.org}
-        dimensions={orgChartDimensions}
-        data={loginsByOrg}
-        labelAxis={orgChartLabelAxis} />
+    <div class="charts p-16 flex flex-col">
+      <div class="h-48 w-full">
+        <LineChart
+          title="Logins By Day"
+          dimensions={dayChartDimensions}
+          data={loginsByDay}
+          tooltipHeader={(d) => d.day}
+          {xAxis} />
+      </div>
+
+      <div class="h-48 w-full">
+        <HorizontalBarChart
+          title="Active Users By Org"
+          labels={(d) => d.org}
+          dimensions={orgChartDimensions}
+          data={loginsByOrg}
+          labelAxis={orgChartLabelAxis} />
+      </div>
     </div>
   {/if}
 </div>
