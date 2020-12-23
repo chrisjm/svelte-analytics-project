@@ -60,7 +60,7 @@
   ];
 
   // Create rainbow color scale based on orgs
-  $: orgColors = scaleSequential(interpolateSinebow).domain([
+  $: orgColors = scaleSequential(['red', 'blue']).domain([
     0,
     loginsByOrg?.length ?? 1,
   ]);
@@ -135,9 +135,9 @@
 <style>
 </style>
 
-<div class="flex flex-col space-y-4 bg-indigo-50">
+<div class="flex flex-col space-y-4 bg-indigo-50 md:px-4">
   {#if loaded}
-    <div class="filterControls">
+    <div class="filterControls flex flex-col md:flex-row">
       <FilterControl
         id="apps"
         labelText="Applications"
