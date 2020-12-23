@@ -24,13 +24,13 @@
 
 <div class="filter-control md:w-1/4">
   <form on:change|preventDefault={handleChange}>
-    <div class="mt-2 mx-1 p-1 text-indigo-400 border-b border-indigo-100 md:mx-0 md:px-0 md:py-4">
+    <div class="mt-2 mx-1 p-1 text-gray-400 border-b border-gray-150 md:mx-0 md:px-0 md:py-4">
       <label for={id}>{labelText}</label>
       <select
         bind:value={selected}
         name={id}
         id={id}
-        class="w-full border-0 bg-transparent focus:ring-indigo-300 p-0 font-bold">
+        class="w-full border-0 bg-transparent focus:ring-gray-300 p-0 font-bold">
         {#each options as option}
           <option value={option}>{option.text}</option>
         {/each}

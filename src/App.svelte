@@ -143,7 +143,7 @@
 <style>
 </style>
 
-<div class="flex flex-col space-y-4 bg-indigo-50 md:px-4">
+<div class="flex flex-col bg-purple-25 md:px-4">
   {#if loaded}
     <div class="filterControls flex flex-col md:flex-row">
       <FilterControl
@@ -163,7 +163,7 @@
         on:updateFilter={updateFilter} />
     </div>
 
-    <div class="flex justify-center space-x-2 md:hidden">
+    <div class="flex justify-center space-x-2 mt-4 md:mt-0 md:justify-end md:px-8 md:top-14 md:relative md:z-10">
       <RadioToggleButton
         name="frequency"
         id="day"
@@ -184,8 +184,8 @@
         on:click={updateFreq} />
     </div>
 
-    <div class="charts p-16 flex flex-col">
-      <div class="h-48 w-full">
+    <div class="charts mt-4 px-8 flex flex-col">
+      <div class="h-48 w-full mt-4">
         <LineChart
           title="Logins By Day"
           dimensions={dayChartDimensions}
@@ -194,7 +194,7 @@
           {xAxis} />
       </div>
 
-      <div class="h-48 w-full">
+      <div class="h-48 w-full mt-4">
         <HorizontalBarChart
           title="Active Users By Org"
           labels={(d) => d.org}

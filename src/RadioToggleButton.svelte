@@ -8,7 +8,7 @@
   export let labelText;
   export let checked = '';
 
-  // Dispatch click as label for, which is input id
+  // Dispatch click as <label> `for` attribute
   function handleClick(event) {
     dispatch('click', {
       id: event.target.htmlFor,
@@ -17,8 +17,10 @@
 
   // Classes for label based on state
   let class_list = {
-    default: 'block py-2 px-4 border font-bold rounded-lg border-transparent',
-    checked: 'border-gray-200 bg-white',
+    default:
+      'block py-2 px-4 font-bold text-gray-400 border border-transparent bg-transparent',
+    checked:
+      'block py-2 px-4 font-bold text-black rounded-lg border border-gray-100 bg-white',
   };
 </script>
 
@@ -28,6 +30,6 @@
 
 <input type="radio" class="hidden" {name} {id} autocomplete="off" {checked} />
 <label
-  class="{class_list['default']} {checked ? class_list['checked'] : ''}"
+  class={checked ? class_list['checked'] : class_list['default']}
   for={id}
   on:click={handleClick}>{labelText}</label>
