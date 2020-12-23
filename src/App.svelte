@@ -13,6 +13,7 @@
   import dayjs from 'dayjs';
   import FilterControl from './FilterControl.svelte';
   import RadioToggleButton from './RadioToggleButton.svelte';
+  import Card from './Card.svelte';
 
   interface LoginsByDay {
     day: string;
@@ -138,6 +139,39 @@
   function updateFreq(event) {
     freqChecked = event.detail.id;
   }
+
+  // Cards
+  // NOTE: Hard-coded for now
+  let cards = [
+    {
+      title: 'Active Users',
+      value: 480,
+      lastValue: 470,
+      unit: 'users',
+      time: 'last 7 days',
+    },
+    {
+      title: 'Sessions',
+      value: 2850,
+      lastValue: 2504,
+      unit: 'sessions',
+      time: 'last 7 days',
+    },
+    {
+      title: 'Time in App',
+      value: 6.123,
+      lastValue: 6.012,
+      unit: 'min/s',
+      time: 'avg',
+    },
+    {
+      title: 'Reports',
+      value: 45,
+      lastValue: 67,
+      unit: 'reports',
+      time: 'last 7 days',
+    },
+  ];
 </script>
 
 <style>
@@ -161,6 +195,18 @@
         labelText="Date range"
         options={dateRangeOptions}
         on:updateFilter={updateFilter} />
+    </div>
+
+    <div
+      class="flex flex-col space-y-4 space-x-0 mt-4 mx-2 md:mx-0 md:flex-row md:space-x-4 md:space-y-0">
+      {#each cards as card}
+        <Card
+          title={card.title}
+          value={card.value}
+          lastValue={card.lastValue}
+          unit={card.unit}
+          time={card.time} />
+      {/each}
     </div>
 
     <div
