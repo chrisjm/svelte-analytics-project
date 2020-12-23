@@ -44,7 +44,7 @@
     loginsByDay.sort(sorter('day'));
     loginsByOrg = loginsByOrg
       .map((d, i) => ({ ...d, index: i }))
-      .sort(sorter('org'));
+      .sort(sorter({ value: 'index', descending: false }));
     console.log({ loginsByDay, loginsByOrg });
     loaded = true;
   }
@@ -60,7 +60,7 @@
     },
   ];
 
-  // Create rainbow color scale based on orgs
+  // Create color scale based on orgs
   $: orgColors = scaleSequential(['red', 'blue']).domain([
     0,
     loginsByOrg?.length ?? 1,
@@ -163,7 +163,8 @@
         on:updateFilter={updateFilter} />
     </div>
 
-    <div class="flex justify-center space-x-2 mt-4 md:mt-0 md:justify-end md:px-8 md:top-14 md:relative md:z-10">
+    <div
+      class="flex justify-center space-x-2 mt-4 md:mt-0 md:justify-end md:px-8 md:top-14 md:relative md:z-10">
       <RadioToggleButton
         name="frequency"
         id="day"
@@ -185,7 +186,7 @@
     </div>
 
     <div class="charts mt-4 px-8 flex flex-col">
-      <div class="h-48 w-full mt-4">
+      <div class="h-48 md:h-72 w-full mt-4">
         <LineChart
           title="Logins By Day"
           dimensions={dayChartDimensions}
@@ -194,7 +195,7 @@
           {xAxis} />
       </div>
 
-      <div class="h-48 w-full mt-4">
+      <div class="h-48 md:h-96 w-full mt-4">
         <HorizontalBarChart
           title="Active Users By Org"
           labels={(d) => d.org}
