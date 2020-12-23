@@ -12,6 +12,7 @@
   } from './charts/dimensions';
   import dayjs from 'dayjs';
   import FilterControl from './FilterControl.svelte';
+  import RadioToggleButton from './RadioToggleButton.svelte';
 
   interface LoginsByDay {
     day: string;
@@ -130,6 +131,13 @@
       };
     });
   }
+
+  // Frequency Toggle Buttons
+  // TODO: Hook up API endpoint
+  let freqChecked = 'day';
+  function updateFreq(event) {
+    freqChecked = event.detail.id;
+  }
 </script>
 
 <style>
@@ -153,6 +161,27 @@
         labelText="Date range"
         options={dateRangeOptions}
         on:updateFilter={updateFilter} />
+    </div>
+
+    <div class="flex justify-center space-x-2 md:hidden">
+      <RadioToggleButton
+        name="frequency"
+        id="day"
+        labelText="Day"
+        checked={freqChecked === 'day' ? 'checked' : ''}
+        on:click={updateFreq} />
+      <RadioToggleButton
+        name="frequency"
+        id="week"
+        labelText="Week"
+        checked={freqChecked === 'week' ? 'checked' : ''}
+        on:click={updateFreq} />
+      <RadioToggleButton
+        name="frequency"
+        id="month"
+        labelText="Month"
+        checked={freqChecked === 'month' ? 'checked' : ''}
+        on:click={updateFreq} />
     </div>
 
     <div class="charts p-16 flex flex-col">
