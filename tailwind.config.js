@@ -1,15 +1,27 @@
 module.exports = {
-  purge: {
-    content: ['./src/**/*.svelte', './src/**/*.html'],
-    options: {
-      defaultExtractor: (content) =>
-        [...content.matchAll(/(?:class:)*([\w\d-/:%.]+)/gm)].map(
-          ([_match, group, ..._rest]) => group
-        ),
-      keyframes: true,
+  // NOTE: Let's not purge during development
+  // purge: {
+  //   content: ['./src/**/*.svelte', './src/**/*.html'],
+  //   options: {
+  //     defaultExtractor: (content) =>
+  //       [...content.matchAll(/(?:class:)*([\w\d-/:%.]+)/gm)].map(
+  //         ([_match, group, ..._rest]) => group
+  //       ),
+  //     keyframes: true,
+  //   },
+  // },
+  theme: {
+    extend: {
+      colors: {
+        purple: {
+          25: '#f5f5fa',
+        },
+        gray: {
+          150: '#efeff2',
+        },
+      },
     },
   },
-  theme: {},
   variants: {},
   plugins: [
     require('@tailwindcss/forms'),
