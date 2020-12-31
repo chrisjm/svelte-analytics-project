@@ -21,6 +21,7 @@
   }
 
   interface LoginsByOrg {
+    org_id: string;
     org: string;
     users: number;
     index: number;
@@ -34,11 +35,21 @@
   let loginsByDay: LoginsByDay[];
   let loginsByOrg: LoginsByOrg[];
 
+  let appFilter = 'all';
+  let orgFilter = 'all';
+  let dateRangeFilter = '30d';
+
   let loaded = false;
 
   async function load() {
     [loginsByDay, loginsByOrg] = await Promise.all([
-      ky('/api/logins_by_day').json<LoginsByDay[]>(),
+      ky('/api/logins_by_day', {
+        searchParams: {
+          app: appFilter,
+          org: orgFilter,
+          dateRange: dateRangeFilter,
+        },
+      }).json<LoginsByDay[]>(),
       ky('/api/logins_by_org').json<LoginsByOrg[]>(),
     ]);
 
@@ -101,18 +112,27 @@
     return s;
   }
 
-  function updateFilter(event) {
-    const { id, text } = event.detail;
-    console.log(`${text} (${id})`);
+  // TODO: Fix redundancy
+  function updateAppFilter(event) {
+    appFilter = event.detail.id;
+    load();
+  }
+  function updateOrgFilter(event) {
+    orgFilter = event.detail.id;
+    load();
+  }
+  function updateDateRangeFilter(event) {
+    dateRangeFilter = event.detail.id;
+    load();
   }
 
-  // Hard-coded for now
   // TODO: Retrieve via API call
   let applicationOptions = [
-    { id: 'all', text: 'All' },
-    { id: '1', text: 'Omni' },
-    { id: '2', text: 'Territory' },
+    { id: 'omni', text: 'Omni' },
+    { id: 'tm', text: 'Territory' },
   ];
+
+  // NB: Presets before custom datepicker implementation
   let dateRangeOptions = [
     { id: 'today', text: 'Today' },
     { id: 'yesterday', text: 'Yesterday' },
@@ -127,14 +147,14 @@
   $: {
     orgOptions = loginsByOrg?.map((d) => {
       return {
-        id: d.index.toString(),
+        id: d.org_id.toString(),
         text: d.org,
       };
     });
   }
 
   // Frequency Toggle Buttons
-  // TODO: Hook up API endpoint
+  // TODO: Hook up to API endpoint
   let freqChecked = 'day';
   function updateFreq(event) {
     freqChecked = event.detail.id;
@@ -184,17 +204,21 @@
         id="apps"
         labelText="Applications"
         options={applicationOptions}
-        on:updateFilter={updateFilter} />
+        selected={appFilter}
+        on:updateFilter={updateAppFilter} />
       <FilterControl
         id="orgs"
         labelText="Organizations"
         options={orgOptions}
-        on:updateFilter={updateFilter} />
+        selected={orgFilter}
+        on:updateFilter={updateOrgFilter} />
       <FilterControl
         id="daterange"
         labelText="Date range"
         options={dateRangeOptions}
-        on:updateFilter={updateFilter} />
+        selected={dateRangeFilter}
+        showAllOption={false}
+        on:updateFilter={updateDateRangeFilter} />
     </div>
 
     <div
